@@ -1,0 +1,89 @@
+html,
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	height: 100%;
+	background: linear-gradient(to bottom, #f4f4f4 0%,#fdfdfd 834px,#fdfdfd 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+#logo {
+	padding: 5px;
+	width: 50px;
+}
+#simplyedit button,
+#simplyedit button * {
+	color: #666 !important;
+}
+#simplyedit .mu-toolbar {
+	border-top-color: #ea5922;
+}
+#simply-main-toolbar .mu-toolbar {
+	border-top-width: 5px;
+}
+#simplyedit .mu-dialog > footer .mu-toolbar {
+    border-top: 2px solid #ccc;
+}
+#simplyedit .mu-dialog > section {
+	overflow: auto;
+}
+#simplyedit .mu-button.mu-focus, 
+#simplyedit .mu-button.mu-hover, 
+#simplyedit .mu-button:focus, 
+#simplyedit .mu-button:hover {
+    border-bottom: 2px solid #ea5922 !important;
+}
+#simplyedit .mu-disabled .mu-button,
+#simplyedit .mu-disabled .mu-button *,
+#simplyedit .mu-button.mu-disabled,
+#simplyedit .mu-button.mu-disabled * {
+    color: #888!important;
+    cursor: default;
+	border-bottom-color: transparent !important;
+}
+#simplyedit main {
+	height: 100%;
+	background-image: url(bg2.jpg);
+	background-repeat: no-repeat;
+}
+#simplyedit .mu-dialog>section {
+    box-shadow: 0 0 25px #666;
+    border-top-color: #ea5922;
+}
+
+
+		.simplyedit-checks h1 {
+			clear: both !important;
+			font-size:18px !important;
+			line-height: 24px;
+			padding: 4px 20px;
+			background-color: #EEE;
+			margin: 10px 0 0 0;
+		}
+		.simplyedit-checks div {
+			padding-left: 20px;
+		}
+		.simplyedit-checks .simplyedit-checks h1 {
+			float: left;
+			clear: both !important;
+			font-weight: normal;
+			padding-left: 40px;
+		}
+		.simplyedit-checks .simplyedit-checks div {
+			font-size: 16px;
+			line-height: 24px;
+			padding-top: 6px;
+		}
+		.simplyedit-fail {
+			clear: both;
+			padding-left: 60px;
+			padding-top: 0;
+			color: red;
+		}
+		.simplyedit-ok {
+			color: green;
+		}
+		.simplyedit-ok::after {
+			content: "";
+			display: block;
+			clear: both;
+		}
