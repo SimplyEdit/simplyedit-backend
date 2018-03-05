@@ -72,16 +72,16 @@
 RewriteEngine on
 <Limit PUT DELETE>
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
     RewriteCond %{REQUEST_METHOD} PUT
-    RewriteRule ^(.*)$ simply-edit/store.php [L,END]
-
+    RewriteRule .* simply-edit/store.php [L]
     RewriteCond %{REQUEST_METHOD} DELETE
-    RewriteRule ^(.*)$ simply-edit/store.php [L,END]
+    RewriteRule .* simply-edit/store.php [L]
+	RewriteCond %{QUERY_STRING} _method=(PUT|DELETE)
+	RewriteRule .* simply-edit/store.php [L]
 </Limit>
 <Limit GET POST>
-	RewriteRule ^logout$ simply-edit/logout.php [L,END]
-	#RewriteRule ^login$ simply-edit/login.php [L,END]
+	RewriteRule ^logout$ simply-edit/logout.php [L]
+	#RewriteRule ^login$ simply-edit/login.php [L]
 </Limit>
 <Limit GET>
     RewriteCond %{HTTP_USER_AGENT} Lynx|w3m|googlebot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|Validator [NC,OR]
