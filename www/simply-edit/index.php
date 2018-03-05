@@ -72,10 +72,10 @@
 RewriteEngine on
 <Limit PUT DELETE>
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-    RewriteCond %{REQUEST_METHOD} PUT
-    RewriteRule .* simply-edit/store.php [L]
-    RewriteCond %{REQUEST_METHOD} DELETE
-    RewriteRule .* simply-edit/store.php [L]
+	RewriteCond %{REQUEST_METHOD} PUT
+	RewriteRule .* simply-edit/store.php [L]
+	RewriteCond %{REQUEST_METHOD} DELETE
+	RewriteRule .* simply-edit/store.php [L]
 	RewriteCond %{QUERY_STRING} _method=(PUT|DELETE)
 	RewriteRule .* simply-edit/store.php [L]
 </Limit>
@@ -84,11 +84,11 @@ RewriteEngine on
 	#RewriteRule ^login$ simply-edit/login.php [L]
 </Limit>
 <Limit GET>
-    RewriteCond %{HTTP_USER_AGENT} Lynx|w3m|googlebot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|Validator [NC,OR]
-    RewriteCond %{QUERY_STRING} _escaped_fragment_
+	RewriteCond %{HTTP_USER_AGENT} Lynx|w3m|googlebot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|Validator [NC,OR]
+	RewriteCond %{QUERY_STRING} _escaped_fragment_
 
-    # Only proxy the request to Prerender if it's a request for HTML
-    RewriteRule ^(?!.*?(\.js|\.css|\.xml|\.less|\.png|\.jpg|\.jpeg|\.gif|\.pdf|\.doc|\.txt|\.ico|\.rss|\.zip|\.mp3|\.rar|\.exe|\.wmv|\.doc|\.avi|\.ppt|\.mpg|\.mpeg|\.tif|\.wav|\.mov|\.psd|\.ai|\.xls|\.mp4|\.m4a|\.swf|\.dat|\.dmg|\.iso|\.flv|\.m4v|\.torrent|\.ttf|\.woff))(.*) simply-edit/prerender.php [L]
+	# Only proxy the request to Prerender if it's a request for HTML
+	RewriteRule ^(?!.*?(\.js|\.css|\.xml|\.less|\.png|\.jpg|\.jpeg|\.gif|\.pdf|\.doc|\.txt|\.ico|\.rss|\.zip|\.mp3|\.rar|\.exe|\.wmv|\.doc|\.avi|\.ppt|\.mpg|\.mpeg|\.tif|\.wav|\.mov|\.psd|\.ai|\.xls|\.mp4|\.m4a|\.swf|\.dat|\.dmg|\.iso|\.flv|\.m4v|\.torrent|\.ttf|\.woff))(.*) simply-edit/prerender.php [L]
 </Limit>
 
 Options +Indexes
