@@ -33,7 +33,11 @@
 	$result = [];
 	$status = 200;
 
-	htpasswd::load('/data/.htpasswd');
+	try {
+		htpasswd::load('/data/.htpasswd');
+	} catch( \Exception $e) {
+		// ignore error, just use empty list
+	}
 	if (is_array($settings->managers)) {
 		foreach ((array)$settings->managers as $index => $manager) {
 			if (!htpasswd::$users[$manager]) {
@@ -50,8 +54,10 @@
 		|| (count((array)$settings->managers) && !in_array($user,$settings->managers))
 	) {
 		setcookie('simply-logout','',1,'/'); // remove the 'i logged off' cookie
+		header('HTTP/1.1 401 Forced Logout');
 		header('WWW-Authenticate: Basic realm="Simply Store"');
-		echo '<h1>401 Access denied</h1>';
+		echo '<meta http-equiv="refresh" content="0; url=//'.$_SERVER['SERVER_NAME'].'/">';
+		echo '<h1>401 Forced Logout</h1>';
 		die();
 	}
 
@@ -1085,8 +1091,17 @@ EOF;
 			</footer>
 			<section id="installCheck">
 <?php 
-	// ><h1 class="simplyeedit-fail">The quickstart templates required PHP (at least 5.6) to work</h1>
-	require_once('checks.php');
+	// ><h1 class="simplyeedit-fail">The quickstart templates require PHP (at least 5.6) to work</h1>
+	// <!--
+	try {
+		require_once('checks.php');
+	} catch ( \Exception $e ) {
+		if (!$errors) {
+			$errors = array();
+		}
+		$errors[] = "Could not run the installation checks, got this error: ".$e->getMessage();
+	}
+	// -->
 ?>
 				<div id="cont" data-pct="<?php echo $percentage; ?>">
 					<svg id="svg" width="200" height="200" viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -1107,7 +1122,7 @@ EOF;
 	</main>
 	<footer>
 	</footer>
-	<script src="http://auke.muze.nl/mu/dist/mu.js"></script>
+	<script src="mu.min.js"></script>
 	<script>
 		var selected = [];
 		var selectedfiles = [];
@@ -1354,8 +1369,8 @@ EOF;
 						htpasswd += editor.pageData.users[i].login + ':' + editor.pageData.users[i].password + "\n";
 					}
 					// send put request
-					return fetch('../data/htpasswd', {
-						method: 'PUT',
+					return fetch('../data/htpasswd?_method=PUT', {
+						method: 'POST',
 						credentials: 'include',
 						body: htpasswd
 					}).then(function(response) {
@@ -1369,8 +1384,8 @@ EOF;
 						'prerender_token': editor.pageData['simply-prerender-token']
 					};
 					content = JSON.stringify(settings);
-					return fetch('../data/settings.json', {
-						method: 'PUT',
+					return fetch('../data/settings.json?_method=PUT', {
+						method: 'POST',
 						credentials: 'include',
 						body: content
 					}).then(function(response) {
@@ -1381,8 +1396,8 @@ EOF;
 					var deleteNext = function() {
 						var file = files.pop();
 						if (file) {
-							return fetch('../data/'+file, {
-								method: 'DELETE',
+							return fetch('../data/'+file+'?_method=DELETE', {
+								method: 'POST',
 								credentials: 'include'
 							})
 							.then(function(response) {
@@ -1409,9 +1424,9 @@ EOF;
 					.then(function(response) {
 						return checkStatus(response);
 					})
-					.then(function() {
-						return fetch('../data/data.json', {
-							method: 'PUT',
+					.then(function(contents) {
+						return fetch('../data/data.json?_method=PUT', {
+							method: 'POST',
 							credentials: 'include',
 							body: contents
 						});
@@ -1425,7 +1440,12 @@ EOF;
 
 		function checkStatus(response) {
 			if ( response.ok ) {
-				return Promise.resolve(response);
+				return response.text();
+			}
+			if ( response.status == 422 ) {
+				return response.json().then(function(err) {
+					throw err;
+				});
 			}
 			var status = response.status;
 			var statusText = response.statusText;

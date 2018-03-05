@@ -6,7 +6,7 @@
 		which triggers the browsers to remove it from the cache and ask
 		for a new username and password
 	*/
-	header("HTTP/1.1 401 Logout done.");
-	header("Location: /");
+	header("HTTP/1.1 401 Unauthorized");
 	setcookie('simply-logout','1',PHP_INT_MAX,'/');
-	
+?>
+<meta http-equiv="refresh" content="0; url=//<?php echo $_SERVER['SERVER_NAME']; ?>/">

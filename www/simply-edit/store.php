@@ -23,6 +23,10 @@
 
 	try {
 		htpasswd::load('/data/.htpasswd');
+	} catch(\Exception $e) {
+		// if no htpasswd is set, accept anyone, should only happen during install
+	}
+	try {
 		$user     = $request['user'];
 		$password = $request['password'];
 		if ( $_COOKIE['simply-logout'] 
@@ -54,7 +58,12 @@
 			$result = filesystem::delete($request['directory'], $request['filename']);
 		} else {
 			$status = 405; //Method not allowed
-			$result = [ 'error' => 405, 'message' => 'Method not allowed' ];
+			// why?
+			$explain = '';
+			if ($request['method']!='PUT' && $request['method']!='DELETE') {
+				$explain .= 'Method "'.$request['method'].'" is unknown. ';
+			}
+			$result = [ 'error' => 405, 'message' => 'Method not allowed. '.$explain ];
 		}
 	} catch( \Exception $e ) {
 		$code = $e->getCode();

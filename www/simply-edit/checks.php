@@ -139,7 +139,7 @@
                         if ($contents && strlen($contents)) {
                             return ok();
                         } else {
-                            return fail('Missing or empty .htaccess file in the document root');
+                            return fail('Missing or empty .htaccess file in the document root.');
                         }
                     }
                 ] 
@@ -155,7 +155,7 @@
                         if ($contents && strlen($contents)) {
                             return ok();
                         } else {
-                            return fail('Missing or empty .htpasswd file in the document root');
+                            return fail('Missing or empty .htpasswd file in the document root.');
                         }
                     }
                 ],
@@ -166,7 +166,7 @@
                         if ( htpasswd::$users && count(htpasswd::$users)) {
                             return ok();
                         } else {
-                            return fail('No users defined in .htpasswd file');
+                            return fail('No users defined in .htpasswd file. Please add at least one user through the "Users" dialog.');
                         }
                     }
                 ],
@@ -184,14 +184,21 @@
         'key' => [
             'title' => 'Checking API keys',
             'check' => function() {
-                // check index.html
+                $fails = [];
+				$files = [];
+                // check index.html or index.php
+				if ( !is_readable(filesystem::$basedir.'/index.html') && !is_readable(filesystem::$basedir.'/index.php')) {
+					$fails[] = fail(filesystem::$basedir.'/ has no readable index.php or index.html. Create one and grant read access for user '.$user);
+				} else if (is_readable(filesystem::$basedir.'/index.html')) {
+					$files[] = filesystem::$basedir.'/index.html';
+				}
                 // check templates/
-                $files = array( filesystem::$basedir.'/index.html' );
                 if ( is_dir(filesystem::$basedir.'/templates/') ) {
                     if ( !is_readable(filesystem::$basedir.'/templates/') ) {
-                        return fail(filesystem::$basedir.'/templates/ directory is not readable. Grant read access for user '.$user);
-                    }
-                    $dir = opendir(filesystem::$basedir.'/templates/');
+                        $fails[] = fail(filesystem::$basedir.'/templates/ directory is not readable. Grant read access for user '.$user);
+                    } else {
+	                    $dir = opendir(filesystem::$basedir.'/templates/');
+					}
                     if ( $dir ) {
                         while (false !== ($entry = readdir($dir))) {
                             $entry = filesystem::$basedir.'/templates/'.$entry;
@@ -201,7 +208,6 @@
                         }
                     }
                 }
-                $fails = [];
                 foreach ( $files as $file ) {
                     $error = checkKey($file);
                     if ( $error ) {
@@ -279,4 +285,3 @@
     if ( count($errors) ) {
         $percentage = 100 - round(( count($errors) / count($results) ) * 100);
     }
-?>

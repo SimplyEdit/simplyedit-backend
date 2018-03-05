@@ -1,12 +1,21 @@
 <?php
 	require_once('config.php');
-
 	$templateDir = '/templates/';
 
+	$request     = http::request();
+/*	if ($request['method']=='PUT' || $request['method']=='DELETE') {
+		// some apache configurations use rewrite rules which map the request method to
+		// GET. The original request method is stored in (REDIRECT_)+REQUEST_METHOD,
+		// which the http::request() method correctly parses, but the .htaccess
+		// file doesn't. It will send these requests to the router instead of the store
+		// This check fixes that.
+		include('store.php');
+		die();
+	}
+*/
 	http::format('html'); // set output format for errors to html instead of json
 
-	$request     = null;
-	$request     = http::request();
+
 	try {
 		$data        = json_decode( filesystem::get('/data/','data.json'), true );
 		if($data === null ){
@@ -21,6 +30,9 @@
 
 	if( !isset($data[$path]) ) {
 		$path   = '/404.html';
+		if (!isset($data[$path])) {
+			$path = '/404.html/';
+		}
 		$status = 404;
 	}
 
@@ -41,8 +53,9 @@
 		}
 
 		http::response($status);
-		filesystem::readfile($templateDir, $template);
-
+		$contents = filesystem::get($templateDir, $template);
+		$contents = preg_replace('/<html/i','<html data-simply-path="'.$path.'"', $contents);
+		echo $contents;
 	} else {
 		http::response(404);
 		echo '

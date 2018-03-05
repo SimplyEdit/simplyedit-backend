@@ -27,6 +27,23 @@ class http {
 		self::$format = $format;
 	}
 
+	private static function getHeader($list, $redirectLevel=0)
+	{
+		$redirect = 'REDIRECT_';
+		if (!is_array($list)) {
+			$list = [ $list => false ];
+		}
+		foreach ( $list as $header => $extraInfo ) {
+			for ($i=$redirectLevel; $i>=0; $i--) {
+				$check = str_repeat($redirect, $i).$header;
+				if ( isset($_SERVER[$check]) ) {
+					return [$header, $_SERVER[$check]];
+				}
+			}
+		}
+		return [false, ''];
+	}
+
 	private static function parseAuthUser($auth) {
 		return explode(':',base64_decode(substr($auth, 6)));
 	}
@@ -36,20 +53,13 @@ class http {
 		$checks = [ 
 			'PHP_AUTH_USER'               => false, 
 			'REMOTE_USER'                 => false, 
-			'REDIRECT_REMOTE_USER'        => false,
 			'HTTP_AUTHORIZATION'          => [self,parseAuthUser],
-			'REDIRECT_HTTP_AUTHORIZATION' => [self,parseAuthUser]
 		];
-		foreach ( $checks as $check => $parse ) {
-			if ( isset($_SERVER[$check]) ) {
-				if ($parse) {
-					return call_user_func($parse, $_SERVER[$check])[0];
-				} else {
-					return $_SERVER[$check];
-				}
-			}
+		list($header, $headerValue) = self::getHeader($checks, 3);
+		if (is_array($checks[$header])) {
+			$headerValue = call_user_func($checks[$header], $headerValue)[0];
 		}
-		return '';
+		return $headerValue;
 	}
 
 	public static function getPassword()
@@ -57,24 +67,28 @@ class http {
 		$checks = [ 
 			'PHP_AUTH_PW'                 => false, 
 			'HTTP_AUTHORIZATION'          => [self,parseAuthUser],
-			'REDIRECT_HTTP_AUTHORIZATION' => [self,parseAuthUser]
 		];
-		foreach ( $checks as $check => $parse ) {
-			if ( isset($_SERVER[$check]) ) {
-				if ($parse) {
-					return call_user_func($parse, $_SERVER[$check])[1];
-				} else {
-					return $_SERVER[$check];
-				}
-			}
+		list($header, $headerValue) = self::getHeader($checks, 3);
+		if (is_array($checks[$header])) {
+			$headerValue = call_user_func($checks[$header], $headerValue)[1];
 		}
-		return '';
+		return $headerValue;
 	}
 
+	public static function getMethod()
+	{
+		list($header, $headerValue) = self::getHeader('REQUEST_METHOD',3);
+		if ($headerValue==='POST') {
+			if ($_GET['_method']=='PUT'||$_GET['_method']=='DELETE') {
+				$headerValue = $_GET['_method'];
+			}
+		}
+		return $headerValue;
+	}
 
 	public static function request()
 	{
-		$target = $_SERVER["REQUEST_URI"];
+		$target = preg_replace('@\?.*$@','',$_SERVER["REQUEST_URI"]);
 		$target = self::sanitizeTarget($target);
 
 		preg_match('@(?<dirname>.+/)?(?<filename>[^/]*)@',$target,$matches);
@@ -86,7 +100,7 @@ class http {
 		$dirname  = filesystem::path( substr($dirname, strlen($subdir) ) );
 		$request = [
 			'protocol'  => $_SERVER['SERVER_PROTOCOL']?:'HTTP/1.1',
-			'method'    => $_SERVER['REQUEST_METHOD'],
+			'method'    => self::getMethod(),
 			'target'    => '/'.$target,
 			'directory' => $dirname,
 			'filename'  => $filename,
