@@ -14,7 +14,7 @@ RewriteEngine on
 </Limit>
 <Limit POST PUT DELETE>
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-	RewriteCond %(REQUEST_METHOD} PUT
+	RewriteCond %{REQUEST_METHOD} PUT
 	RewriteRule .* simply-edit/store.php [L]
 	RewriteCond %{REQUEST_METHOD} DELETE
 	RewriteRule .* simply-edit/store.php [L]

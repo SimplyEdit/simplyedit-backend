@@ -70,7 +70,7 @@
 	</Limit>
 </Files>
 RewriteEngine on
-<Limit PUT DELETE>
+<Limit POST PUT DELETE>
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 	RewriteCond %{REQUEST_METHOD} PUT
 	RewriteRule .* simply-edit/store.php [L]
