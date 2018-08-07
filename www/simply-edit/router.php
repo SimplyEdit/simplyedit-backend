@@ -3,7 +3,7 @@
 	$templateDir = '/templates/';
 
 	$request     = http::request();
-/*	if ($request['method']=='PUT' || $request['method']=='DELETE') {
+	if ($request['method']=='PUT' || $request['method']=='DELETE') {
 		// some apache configurations use rewrite rules which map the request method to
 		// GET. The original request method is stored in (REDIRECT_)+REQUEST_METHOD,
 		// which the http::request() method correctly parses, but the .htaccess
@@ -12,12 +12,12 @@
 		include('store.php');
 		die();
 	}
-*/
+
 	http::format('html'); // set output format for errors to html instead of json
 
 
 	try {
-		$data        = json_decode( filesystem::get('/data/','data.json'), true );
+		$data = json_decode( filesystem::get('/data/','data.json'), true );
 		if($data === null ){
 			$data = [];
 		}
@@ -25,11 +25,15 @@
 		$data = [];
 	}
 
-	$path        = $request['target'];
-	$status      = 200;
+	$path   = $request['target'];
+	$status = 200;
 
-	if( !isset($data[$path]) ) {
-		$path   = '/404.html';
+	if( !isset($data[$path]) && isset($data[$path.'/']) ) {
+		header('Location: '.$path.'/');
+		http::response(301);
+		die();
+	} else if (!isset($data[$path])) {
+		$path = '/404.html';
 		if (!isset($data[$path])) {
 			$path = '/404.html/';
 		}
