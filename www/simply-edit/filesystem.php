@@ -321,4 +321,9 @@ class filesystem {
 		fclose($lock['resource']);
 		unlink($lock['filename'].'.lock');
 	}
+
+    public static function glob($pattern)
+    {
+        return glob(rtrim(self::$basedir, '/') . '/' . $pattern);
+    }
 }
