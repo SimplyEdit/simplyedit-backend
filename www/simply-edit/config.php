@@ -1,4 +1,7 @@
 <?php
+	// Make sure that any preliminary output does not cause incorrect 200 return codes
+	ob_start();
+
 	error_reporting(E_ERROR & E_WARNING);
 	ini_set('display_errors',1);
 
@@ -11,7 +14,6 @@
 	filesystem::allow('/data/','application/json.*');
 	filesystem::allow('/data/','text/.*');
 	filesystem::allow('/img/','image/.*');
-	
 	filesystem::allow('/files/','.*');
 
 	filesystem::check('put', '/data/data.json', function($filename, $realfile) {
@@ -35,4 +37,11 @@
 		}
 	});
 
-	$settings = json_decode(filesystem::get('/data/','settings.json'));
+	try {
+		$str = filesystem::get('/data/', 'settings.json');
+	} catch (Exception $e) {
+		http::response( 500, [ 'error' => $e->getCode(), 'message' => $e->getMessage() ] );
+		die;
+	}
+
+	$settings = json_decode($str);
