@@ -30,7 +30,7 @@
 		$user     = $request['user'];
 		$password = $request['password'];
 		if ( $_COOKIE['simply-logout'] 
-			|| (count(htpasswd::$users) && (!$user || !$password || !htpasswd::check($user, $password))) 
+			|| (count(htpasswd::$users) && (!$user || !$password || !htpasswd::check($user, $password)))
 		) {
 			setcookie('simply-logout','',1,'/'); // remove the 'i logged off' cookie
 			header('WWW-Authenticate: Basic realm="Simply Store"');
@@ -43,7 +43,7 @@
 			if ( $request['directory']=='/data/' && $request['filename']=='data.json') {
 				filesystem::copy('/data/','data.json','/data/','data.'.strftime('%Y-%m-%d-%H').'.json');
 				// check number of backups vs max_backups
-				$list = glob('../data/data.*.json');
+				$list = filesystem::glob('/data/data.*.json');
 				if ( count($list) > $settings->max_backups ) {
 					// clean up old backups
 					sort($list);
