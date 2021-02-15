@@ -120,6 +120,7 @@ class http {
 			break;
 			case 'json':
 			default:
+				header('Content-type:application/json');
 				echo json_encode($data, JSON_UNESCAPED_UNICODE);
 			break;
 		}
