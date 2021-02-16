@@ -61,8 +61,9 @@
 		$contents = preg_replace('/<html/i','<html data-simply-path="'.$path.'"', $contents);
 		echo $contents;
 	} else {
-		http::response(404);
-		echo '
+        http::response(404);
+
+        $contents = <<<'HTML'
 <!doctype html>
 <html lang="en">
 <head>
@@ -73,5 +74,12 @@
 	<h1>Page not found (error: 404)</h1>
 </body>
 </html>
-';
+
+HTML;
+        if ($request['target'] === '/favicon.ico') {
+            http::format('svg');
+            http::response(200);
+            $contents = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><circle cx="1" cy="1" r="1" fill="#F62"/></svg>';
+        }
+        echo $contents;
 	}
