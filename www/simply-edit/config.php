@@ -8,8 +8,11 @@
 	require_once('http.php');
 	require_once('filesystem.php');
 	require_once('htpasswd.php');
+	require_once('determine_basedir.php');
 
-	filesystem::basedir(dirname(__DIR__)); // parent of current directory
+	$basedir = determine_basedir();
+
+	filesystem::basedir($basedir);
 
 	filesystem::allow('/data/','application/json.*');
 	filesystem::allow('/data/','text/.*');
