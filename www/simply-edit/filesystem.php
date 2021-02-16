@@ -52,11 +52,18 @@ class filesystem {
 
 	private static function realpaths($dirname, $filename)
 	{
-		$realfile = realpath(self::append(self::$basedir, $dirname) . $filename );
-		$realdir  = realpath(self::append(self::$basedir, $dirname));
+		$basedir = self::$basedir;
+
+		if ($basedir !== realpath($basedir)) {
+			// Symlink used
+			$basedir = realpath($basedir);
+		}
+
+		$realfile = realpath(self::append($basedir, $dirname) . $filename );
+		$realdir  = realpath(self::append($basedir, $dirname));
 
 		if ( !$realdir ) {
-			$realdir = self::append(self::$basedir, $dirname);
+			$realdir = self::append($basedir, $dirname);
 		} else {
 			$realdir .= '/';
 		}
@@ -65,8 +72,8 @@ class filesystem {
 			$realfile = $realdir . $filename;
 		}
 
-		if ( strpos($realfile, self::$basedir)!==0
-			|| strpos($realdir, self::$basedir)!==0 ) {
+		if ( strpos($realfile, $basedir) !== 0
+			|| strpos($realdir, $basedir) !== 0 ) {
 			throw new fsException('Attempted file access outside base directory', 110);
 		}
 		return [ $realdir, $realfile ];
