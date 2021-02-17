@@ -1,0 +1,27 @@
+---
+name: Linting jobs
+
+# yamllint disable-line rule:truthy
+on:
+  - push
+  - pull_request
+
+jobs:
+  php-compat:
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '5.6'
+          - '7.0'
+          - '7.1'
+          - '7.2'
+          - '7.3'
+          - '7.4'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pipeline-components/php-codesniffer@v0.14.1
+        with:
+          options: "-s --extensions=php --standard=PHPCompatibility --runtime-set testVersion ${{ matrix.version }}"
+
