@@ -26,5 +26,5 @@ function determine_basedir()
         throw new \RuntimeException('Could not reliably determine base directory to store data. ($_SERVER variables "DOCUMENT_ROOT", "PHP_SELF", "SCRIPT_FILENAME", and "SCRIPT_NAME" are all unavailable)');
     }
 
-    return dirname($currentFile, 2);
+    return dirname(dirname($currentFile));
 }
