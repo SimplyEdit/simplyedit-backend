@@ -118,9 +118,13 @@ class http {
 			case 'html':
 				echo $data;
 			break;
+            case 'svg':
+                header('Content-type: image/svg+xml');
+                echo $data;
+                break;
 			case 'json':
 			default:
-				header('Content-type:application/json');
+				header('Content-type: application/json');
 				echo json_encode($data, JSON_UNESCAPED_UNICODE);
 			break;
 		}
