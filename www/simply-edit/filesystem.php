@@ -215,7 +215,7 @@ class filesystem {
 		$finfo      = new finfo(FILEINFO_MIME);
 		$mimetype   = $finfo->file($tempfile);
 		$mimetypes[]= 'inode/x-empty';
-		$mimetypeRe = '{'.implode($mimetypes, '|').'}i';
+		$mimetypeRe = '{'.implode('|', $mimetypes).'}i';
 		if ( !preg_match($mimetypeRe, $mimetype) ) {
 			throw new fsException('Files with mimetype '.$mimetype.' are not allowed in '.$dirname, 108);
 		}
