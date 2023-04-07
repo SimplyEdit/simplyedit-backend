@@ -1,5 +1,5 @@
 ---
-name: Linting jobs
+name: PHP Compatibility Check
 
 # yamllint disable-line rule:truthy
 on:
@@ -19,9 +19,12 @@ jobs:
           - '7.2'
           - '7.3'
           - '7.4'
+          - '8.0'
+          - '8.1'
+          - '8.2'
     steps:
       - uses: actions/checkout@v2
-      - uses: pipeline-components/php-codesniffer@v0.14.1
+      - uses: pipeline-components/php-codesniffer@v0.28.1
         with:
           options: "-s --extensions=php --standard=PHPCompatibility --runtime-set testVersion ${{ matrix.version }}"
 
