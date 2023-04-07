@@ -23,7 +23,7 @@ jobs:
           - '8.1'
           - '8.2'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: pipeline-components/php-codesniffer@v0.28.1
         with:
           options: "-s --extensions=php --standard=PHPCompatibility --runtime-set testVersion ${{ matrix.version }}"
