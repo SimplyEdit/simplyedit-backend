@@ -1,0 +1,12 @@
+{
+    "name": "simplyedit/simplyedit-backend",
+    "description": "SimplyEdit Server-side Backend",
+    "type": "project",
+    "license": "MIT",
+    "authors": [{
+        "name": "Auke van Slooten",
+        "email": "auke@muze.nl"
+    }],
+    "require": {
+    }
+}
