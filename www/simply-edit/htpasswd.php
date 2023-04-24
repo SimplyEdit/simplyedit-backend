@@ -30,12 +30,12 @@
 
         public static function load($filename) {
             $lines = preg_split('/\r\n|\r|\n/',filesystem::get('/', $filename));
-			foreach ($lines as $line) {
-				list($user,$password) = array_map('trim', explode(':',$line));
+            foreach ($lines as $line) {
+                list($user,$password) = array_map('trim', explode(':',$line)) + ['',''];
                 if ($user && $password) {
-    				self::$users[$user] = $password;
+                    self::$users[$user] = $password;
                 }
-			}
+            }
         }
 
         public static function check($user, $password) {
