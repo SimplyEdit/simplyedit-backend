@@ -2,9 +2,6 @@
 	// Make sure that any preliminary output does not cause incorrect 200 return codes
 	ob_start();
 
-	error_reporting(E_ERROR & E_WARNING);
-	ini_set('display_errors',1);
-
 	require_once('http.php');
 	require_once('filesystem.php');
 	require_once('htpasswd.php');
