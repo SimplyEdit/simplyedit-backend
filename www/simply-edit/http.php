@@ -53,7 +53,7 @@ class http {
 		$checks = [ 
 			'PHP_AUTH_USER'               => false, 
 			'REMOTE_USER'                 => false, 
-			'HTTP_AUTHORIZATION'          => [self,parseAuthUser],
+			'HTTP_AUTHORIZATION'          => function($auth) { return self::parseAuthUser($auth); },
 		];
 		list($header, $headerValue) = self::getHeader($checks, 3);
 		if (is_array($checks[$header])) {
@@ -66,9 +66,11 @@ class http {
 	{
 		$checks = [ 
 			'PHP_AUTH_PW'                 => false, 
-			'HTTP_AUTHORIZATION'          => [self,parseAuthUser],
+			'HTTP_AUTHORIZATION'          => function($auth) { return self::parseAuthUser($auth); },
 		];
 		list($header, $headerValue) = self::getHeader($checks, 3);
+
+		$headerInfo = self::getHeader($checks,3);
 		if (is_array($checks[$header])) {
 			$headerValue = call_user_func($checks[$header], $headerValue)[1];
 		}

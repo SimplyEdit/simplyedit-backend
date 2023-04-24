@@ -38,7 +38,7 @@
 	} catch( \Exception $e) {
 		// ignore error, just use empty list
 	}
-	if (is_array($settings->managers)) {
+	if (isset($settings->managers) && is_array($settings->managers)) {
 		foreach ((array)$settings->managers as $index => $manager) {
 			if (!htpasswd::$users[$manager]) {
 				unset($settings->managers[$index]);
@@ -49,7 +49,7 @@
 	}
 	$user     = $request['user'];
 	$password = $request['password'];
-	if ( $_COOKIE['simply-logout'] 
+	if ( (isset($_COOKIE['simply-logout']) && $_COOKIE['simply-logout']) 
 		|| (count(htpasswd::$users) && (!$user || !$password || !htpasswd::check($user, $password))) 
 		|| (count((array)$settings->managers) && !in_array($user,$settings->managers))
 	) {
@@ -1567,7 +1567,6 @@ EOF;
 	</script>
 	<script>
 		<?php
-			htpasswd::load('/data/','.htpasswd');
 			echo 'var users = '.json_encode(htpasswd::$users).';'; 
 		?>
 		document.addEventListener('simply-content-loaded', function(){

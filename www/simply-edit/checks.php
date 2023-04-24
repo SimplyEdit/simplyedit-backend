@@ -162,7 +162,7 @@
                 'user' => [
                     'title' => 'Checking if it contains a valid user.',
                     'check' => function() {
-                        htpasswd::load('/data/','.htpasswd');
+                        htpasswd::load('/data/.htpasswd');
                         if ( htpasswd::$users && count(htpasswd::$users)) {
                             return ok();
                         } else {
@@ -173,7 +173,7 @@
                 'simplyedit' => [
                     'title' => 'Checking if simplyedit user has been disabled.',
                     'check' => function() {
-                        if ( htpasswd::$users['simplyedit'] ) {
+                        if ( isset(htpasswd::$users['simplyedit']) ) {
                             return fail('Please delete the user simplyedit and replace it with a personal account.');
                         }
                         return ok();
@@ -249,7 +249,7 @@
     }
 
     function run_check($check) {
-        if ( $check['checks'] ) {
+        if ( isset($check['checks']) ) {
             $result = run_checks($check['checks']);
         } else {
             try {
