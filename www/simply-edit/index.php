@@ -798,7 +798,7 @@ EOF;
 						<label>
 							<span class="mu-form-label">Max. number of backups</span>
 							<input type="number" name="simply-max-backups" data-simply-field="simply-max-backups" value="<?php
-								echo $settings->max_backups ?: '10';
+								echo isset($settings->max_backups) ? $settings->max_backups : '10';
 							?>">
 						</label>
 						<div class="mu-form-help">
@@ -810,7 +810,7 @@ EOF;
 						<label>
 							<span class="mu-form-label">Prerender.io token</span>
 							<input type="text" name="simply-prerender-token" data-simply-field="simply-prerender-token" value="<?php
-								echo $settings->prerender_token ?: '';
+								echo isset($settings->prerender_token) ? $settings->prerender_token : '';
 							?>">
 						</label>
 						<div class="mu-form-help">
