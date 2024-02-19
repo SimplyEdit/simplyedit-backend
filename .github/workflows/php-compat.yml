@@ -8,7 +8,7 @@ on:
 
 jobs:
   php-compat:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -22,9 +22,10 @@ jobs:
           - '8.0'
           - '8.1'
           - '8.2'
+          - '8.3'
     steps:
-      - uses: actions/checkout@v3
-      - uses: pipeline-components/php-codesniffer@v0.28.1
+      - uses: actions/checkout@v4
+      - uses: pipeline-components/php-codesniffer@master
         with:
           options: "-s --extensions=php --standard=PHPCompatibility --runtime-set testVersion ${{ matrix.version }}"
 
