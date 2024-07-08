@@ -1537,7 +1537,6 @@ EOF;
 		}
 	</script>
 	<script src="sha1.js"></script>
-	<script src="https://cdn.polyfill.io/v2/polyfill.minify.js?features=default,fetch|gated"></script>
 	<script>
 		document.addEventListener('simply-content-loaded', function(){
 			fetch('/data/')
