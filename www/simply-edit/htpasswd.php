@@ -82,7 +82,7 @@
             return password_verify($password, $crypted);
         }
 
-        private function cryptApr1Md5($plainpasswd, $salt) {
+        private static function cryptApr1Md5($plainpasswd, $salt) {
             $len  = strlen($plainpasswd);
             $text = $plainpasswd.'$apr1$'.$salt;
             $bin  = pack("H32", md5($plainpasswd.$salt.$plainpasswd));
