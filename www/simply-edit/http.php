@@ -50,13 +50,13 @@ class http {
 
 	public static function getUser()
 	{
-		$checks = [ 
-			'PHP_AUTH_USER'               => false, 
-			'REMOTE_USER'                 => false, 
+		$checks = [
+			'PHP_AUTH_USER'               => false,
+			'REMOTE_USER'                 => false,
 			'HTTP_AUTHORIZATION'          => function($auth) { return self::parseAuthUser($auth); },
 		];
 		list($header, $headerValue) = self::getHeader($checks, 3);
-		if (is_array($checks[$header])) {
+		if (isset($checks[$header]) && is_array($checks[$header])) {
 			$headerValue = call_user_func($checks[$header], $headerValue)[0];
 		}
 		return $headerValue;
@@ -64,8 +64,8 @@ class http {
 
 	public static function getPassword()
 	{
-		$checks = [ 
-			'PHP_AUTH_PW'                 => false, 
+		$checks = [
+			'PHP_AUTH_PW'                 => false,
 			'HTTP_AUTHORIZATION'          => function($auth) { return self::parseAuthUser($auth); },
 		];
 		list($header, $headerValue) = self::getHeader($checks, 3);
@@ -120,14 +120,22 @@ class http {
 			case 'html':
 				echo $data;
 			break;
-            case 'svg':
-                header('Content-type: image/svg+xml');
-                echo $data;
-                break;
+			case 'svg':
+				header('Content-type: image/svg+xml');
+				echo $data;
+			break;
+			case 'text':
+				header('Content-Type: text/plain');
+				echo $data;
+			break;
+			case 'rawjson':
+				header('Content-Type: application/json');
+				echo $data;
+			break;
 			case 'json':
 			default:
-				header('Content-type: application/json');
-				echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+				header('Content-Type: application/json');
+				echo json_encode($data, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 			break;
 		}
 	}

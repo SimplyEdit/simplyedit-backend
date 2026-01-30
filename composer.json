@@ -8,5 +8,6 @@
         "email": "auke@muze.nl"
     }],
     "require": {
+      "ext-json": "*"
     }
 }
