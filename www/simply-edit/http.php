@@ -126,8 +126,8 @@ class http {
                 break;
 			case 'json':
 			default:
-				header('Content-type: application/json');
-				echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+				header('Content-Type: application/json');
+				echo json_encode($data, JSON_INVALID_UTF8_IGNORE | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 			break;
 		}
 	}
