@@ -56,7 +56,7 @@ class http {
 			'HTTP_AUTHORIZATION'          => function($auth) { return self::parseAuthUser($auth); },
 		];
 		list($header, $headerValue) = self::getHeader($checks, 3);
-		if (is_array($checks[$header])) {
+		if (isset($checks[$header]) && is_array($checks[$header])) {
 			$headerValue = call_user_func($checks[$header], $headerValue)[0];
 		}
 		return $headerValue;
