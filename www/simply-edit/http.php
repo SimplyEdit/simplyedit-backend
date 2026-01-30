@@ -120,10 +120,18 @@ class http {
 			case 'html':
 				echo $data;
 			break;
-            case 'svg':
-                header('Content-type: image/svg+xml');
-                echo $data;
-                break;
+			case 'svg':
+				header('Content-type: image/svg+xml');
+				echo $data;
+			break;
+			case 'text':
+				header('Content-Type: text/plain');
+				echo $data;
+			break;
+			case 'rawjson':
+				header('Content-Type: application/json');
+				echo $data;
+			break;
 			case 'json':
 			default:
 				header('Content-Type: application/json');
