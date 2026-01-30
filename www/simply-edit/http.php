@@ -50,9 +50,9 @@ class http {
 
 	public static function getUser()
 	{
-		$checks = [ 
-			'PHP_AUTH_USER'               => false, 
-			'REMOTE_USER'                 => false, 
+		$checks = [
+			'PHP_AUTH_USER'               => false,
+			'REMOTE_USER'                 => false,
 			'HTTP_AUTHORIZATION'          => function($auth) { return self::parseAuthUser($auth); },
 		];
 		list($header, $headerValue) = self::getHeader($checks, 3);
@@ -64,8 +64,8 @@ class http {
 
 	public static function getPassword()
 	{
-		$checks = [ 
-			'PHP_AUTH_PW'                 => false, 
+		$checks = [
+			'PHP_AUTH_PW'                 => false,
 			'HTTP_AUTHORIZATION'          => function($auth) { return self::parseAuthUser($auth); },
 		];
 		list($header, $headerValue) = self::getHeader($checks, 3);
